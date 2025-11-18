@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Have You Been Craving?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, #6b46c1 0%, #4a2c7d 100%);
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-transform: capitalize;
+        }
+
+        .craving {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 60px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .ring-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .food-item {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            left: 50%;
+            top: 50%;
+            margin-left: -40px;
+            margin-top: -40px;
+            cursor: pointer;
+        }
+
+        .food-item.selected {
+            background: #FFD700;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .food-item.selected:nth-child(1) {
+            transform: rotate(0deg) translate(160px) rotate(0deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(2) {
+            transform: rotate(51.4deg) translate(160px) rotate(-51.4deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(3) {
+            transform: rotate(102.8deg) translate(160px) rotate(-102.8deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(4) {
+            transform: rotate(154.2deg) translate(160px) rotate(-154.2deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(5) {
+            transform: rotate(205.6deg) translate(160px) rotate(-205.6deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(6) {
+            transform: rotate(257deg) translate(160px) rotate(-257deg) scale(1.2);
+        }
+
+        .food-item.selected:nth-child(7) {
+            transform: rotate(308.4deg) translate(160px) rotate(-308.4deg) scale(1.2);
+        }
+
+        .food-item.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .food-item:nth-child(1) {
+            transform: rotate(0deg) translate(160px) rotate(0deg);
+        }
+
+        .food-item:hover:nth-child(1) {
+            transform: rotate(0deg) translate(160px) rotate(0deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(1) {
+            transform: rotate(0deg) translate(160px) rotate(0deg);
+        }
+
+        .food-item:nth-child(2) {
+            transform: rotate(51.4deg) translate(160px) rotate(-51.4deg);
+        }
+
+        .food-item:hover:nth-child(2) {
+            transform: rotate(51.4deg) translate(160px) rotate(-51.4deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(2) {
+            transform: rotate(51.4deg) translate(160px) rotate(-51.4deg);
+        }
+
+        .food-item:nth-child(3) {
+            transform: rotate(102.8deg) translate(160px) rotate(-102.8deg);
+        }
+
+        .food-item:hover:nth-child(3) {
+            transform: rotate(102.8deg) translate(160px) rotate(-102.8deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(3) {
+            transform: rotate(102.8deg) translate(160px) rotate(-102.8deg);
+        }
+
+        .food-item:nth-child(4) {
+            transform: rotate(154.2deg) translate(160px) rotate(-154.2deg);
+        }
+
+        .food-item:hover:nth-child(4) {
+            transform: rotate(154.2deg) translate(160px) rotate(-154.2deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(4) {
+            transform: rotate(154.2deg) translate(160px) rotate(-154.2deg);
+        }
+
+        .food-item:nth-child(5) {
+            transform: rotate(205.6deg) translate(160px) rotate(-205.6deg);
+        }
+
+        .food-item:hover:nth-child(5) {
+            transform: rotate(205.6deg) translate(160px) rotate(-205.6deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(5) {
+            transform: rotate(205.6deg) translate(160px) rotate(-205.6deg);
+        }
+
+        .food-item:nth-child(6) {
+            transform: rotate(257deg) translate(160px) rotate(-257deg);
+        }
+
+        .food-item:hover:nth-child(6) {
+            transform: rotate(257deg) translate(160px) rotate(-257deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(6) {
+            transform: rotate(257deg) translate(160px) rotate(-257deg);
+        }
+
+        .food-item:nth-child(7) {
+            transform: rotate(308.4deg) translate(160px) rotate(-308.4deg);
+        }
+
+        .food-item:hover:nth-child(7) {
+            transform: rotate(308.4deg) translate(160px) rotate(-308.4deg) scale(1.2);
+        }
+
+        .food-item.disabled:hover:nth-child(7) {
+            transform: rotate(308.4deg) translate(160px) rotate(-308.4deg);
+        }
+
+        .submit-btn {
+            margin-top: 60px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: white;
+            color: #4a2c7d;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+            font-weight: bold;
+        }
+
+        .submit-btn:disabled {
+            background: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            margin: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .modal-content p {
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .understand-btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #e8563f;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .understand-btn:hover {
+            background: #d14830;
+        }
+
+        /* Results page styles */
+        .results-page {
+            display: none;
+            padding: 40px 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .results-page.active {
+            display: block;
+        }
+
+        .selection-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .selection-page.hidden {
+            display: none;
+        }
+
+        .results-header {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .results-header h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .neurotransmitter-list {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .neurotransmitter-list h3 {
+            color: #4a2c7d;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .nt-item {
+            color: #4a2c7d;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .foods-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+
+        .foods-section h3 {
+            color: #4a2c7d;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .food-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .food-tag {
+            background: #f0e6ff;
+            color: #4a2c7d;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .back-btn {
+            background: white;
+            color: #4a2c7d;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+                padding: 0 20px;
+            }
+
+            .ring-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .food-item {
+                width: 60px;
+                height: 60px;
+                margin-left: -30px;
+                margin-top: -30px;
+                font-size: 2rem;
+            }
+
+            .food-item:nth-child(1) {
+                transform: rotate(0deg) translate(120px) rotate(0deg);
+            }
+
+            .food-item:hover:nth-child(1) {
+                transform: rotate(0deg) translate(120px) rotate(0deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(1) {
+                transform: rotate(0deg) translate(120px) rotate(0deg) scale(1.2);
+            }
+
+            .food-item:nth-child(2) {
+                transform: rotate(51.4deg) translate(120px) rotate(-51.4deg);
+            }
+
+            .food-item:hover:nth-child(2) {
+                transform: rotate(51.4deg) translate(120px) rotate(-51.4deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(2) {
+                transform: rotate(51.4deg) translate(120px) rotate(-51.4deg) scale(1.2);
+            }
+
+            .food-item:nth-child(3) {
+                transform: rotate(102.8deg) translate(120px) rotate(-102.8deg);
+            }
+
+            .food-item:hover:nth-child(3) {
+                transform: rotate(102.8deg) translate(120px) rotate(-102.8deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(3) {
+                transform: rotate(102.8deg) translate(120px) rotate(-102.8deg) scale(1.2);
+            }
+
+            .food-item:nth-child(4) {
+                transform: rotate(154.2deg) translate(120px) rotate(-154.2deg);
+            }
+
+            .food-item:hover:nth-child(4) {
+                transform: rotate(154.2deg) translate(120px) rotate(-154.2deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(4) {
+                transform: rotate(154.2deg) translate(120px) rotate(-154.2deg) scale(1.2);
+            }
+
+            .food-item:nth-child(5) {
+                transform: rotate(205.6deg) translate(120px) rotate(-205.6deg);
+            }
+
+            .food-item:hover:nth-child(5) {
+                transform: rotate(205.6deg) translate(120px) rotate(-205.6deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(5) {
+                transform: rotate(205.6deg) translate(120px) rotate(-205.6deg) scale(1.2);
+            }
+
+            .food-item:nth-child(6) {
+                transform: rotate(257deg) translate(120px) rotate(-257deg);
+            }
+
+            .food-item:hover:nth-child(6) {
+                transform: rotate(257deg) translate(120px) rotate(-257deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(6) {
+                transform: rotate(257deg) translate(120px) rotate(-257deg) scale(1.2);
+            }
+
+            .food-item:nth-child(7) {
+                transform: rotate(308.4deg) translate(120px) rotate(-308.4deg);
+            }
+
+            .food-item:hover:nth-child(7) {
+                transform: rotate(308.4deg) translate(120px) rotate(-308.4deg) scale(1.2);
+            }
+
+            .food-item.selected:nth-child(7) {
+                transform: rotate(308.4deg) translate(120px) rotate(-308.4deg) scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="modal" id="disclaimerModal">
+        <div class="modal-content">
+            <p>The content on this site is for informational purposes only and is not intended as medical advice. Always seek the advice of your physician or another qualified healthcare provider with any questions you may have regarding a medical condition.</p>
+            <button class="understand-btn" onclick="closeModal()">I Understand</button>
+        </div>
+    </div>
+
+    <div class="selection-page" id="selectionPage">
+        <h1>What Have You Been <span class="craving">Craving</span> Lately?</h1>
+        <p class="subtitle">Select up to 3</p>
+        
+        <div class="ring-container">
+            <div class="food-item" data-craving="chocolate" title="Chocolate" onclick="toggleSelection(this)">🍫</div>
+            <div class="food-item" data-craving="sweets" title="Something Sweet" onclick="toggleSelection(this)">🍪</div>
+            <div class="food-item" data-craving="crunchy" title="Something Crunchy" onclick="toggleSelection(this)">🥕</div>
+            <div class="food-item" data-craving="fried" title="Something Fried" onclick="toggleSelection(this)">🍗</div>
+            <div class="food-item" data-craving="fruit" title="Fruit" onclick="toggleSelection(this)">🍓</div>
+            <div class="food-item" data-craving="ice cream" title="Ice Cream" onclick="toggleSelection(this)">🍦</div>
+            <div class="food-item" data-craving="carbs" title="Carbs" onclick="toggleSelection(this)">🥐</div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" disabled onclick="showResults()">Submit</button>
+    </div>
+
+    <div class="results-page" id="resultsPage">
+        <div class="results-header">
+            <h2>You may be low in</h2>
+        </div>
+        <div id="resultsContent"></div>
+        <button class="back-btn" onclick="goBack()">Back</button>
+    </div>
+
+    <script>
+        let selectedCount = 0;
+        const maxSelections = 3;
+        const selectedCravings = new Set();
+
+        // Neurotransmitter mapping based on CSV
+        const cravingToNeurotransmitter = {
+            'carbs': ['Dopamine', 'Norepinephrine'],
+            'sweets': ['Dopamine', 'Serotonin', 'GABA'],
+            'fruit': ['Dopamine', 'Serotonin'],
+            'crunchy': ['Dopamine', 'Serotonin', 'GABA'],
+            'chocolate': ['Dopamine', 'Serotonin', 'Acetylcholine'],
+            'fried': ['Acetylcholine', 'GABA'],
+            'ice cream': ['Dopamine', 'Serotonin', 'GABA']
+        };
+
+        // Food recommendations by neurotransmitter
+        const foodRecommendations = {
+            'Dopamine': [
+                'Beef', 'Pork', 'Salmon', 'Chicken', 'Tofu', 'Milk', 'White beans',
+                'Squash & pumpkin seeds', 'Wild rice', 'Cheese', 'Sunflower seeds'
+            ],
+            'Serotonin': [
+                'Beef', 'Poultry', 'Avocado', 'Eggs', 'Buckwheat', 'Bananas',
+                'Nuts & seeds', 'Soy', 'Peanuts', 'Lentils', 'Oats', 'Sweet potato'
+            ],
+            'Acetylcholine': [
+                'Egg yolk', 'Kidney beans', 'Navy beans', 'Peas', 'Tuna', 'Salmon',
+                'Brussels sprouts', 'Collards', 'Bok choy', 'Potatoes', 'Shiitake mushroom'
+            ],
+            'Norepinephrine': [
+                'Oranges', 'Lemon', 'Grapefruit', 'Bell peppers', 'Kiwi', 'Broccoli',
+                'Strawberries', 'Tomatoes', 'Brussels sprouts', 'Potatoes', 'Spinach'
+            ],
+            'GABA': [
+                'Tuna', 'Salmon', 'Poultry', 'Beef liver', 'Chickpeas', 'Lentils', 'Bananas'
+            ]
+        };
+
+        function toggleSelection(element) {
+            if (element.classList.contains('disabled') && !element.classList.contains('selected')) {
+                return;
+            }
+
+            const craving = element.getAttribute('data-craving');
+
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedCount--;
+                selectedCravings.delete(craving);
+            } else {
+                if (selectedCount < maxSelections) {
+                    element.classList.add('selected');
+                    selectedCount++;
+                    selectedCravings.add(craving);
+                }
+            }
+
+            updateUI();
+        }
+
+        function updateUI() {
+            const submitBtn = document.getElementById('submitBtn');
+            const foodItems = document.querySelectorAll('.food-item');
+
+            submitBtn.disabled = selectedCount === 0;
+
+            if (selectedCount >= maxSelections) {
+                foodItems.forEach(item => {
+                    if (!item.classList.contains('selected')) {
+                        item.classList.add('disabled');
+                    }
+                });
+            } else {
+                foodItems.forEach(item => {
+                    item.classList.remove('disabled');
+                });
+            }
+        }
+
+        function getRandomFoods(foodList, count = 4) {
+            const shuffled = [...foodList].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        function showResults() {
+            // Analyze cravings and determine depleted neurotransmitters
+            const depletedNeurotransmitters = new Set();
+            
+            selectedCravings.forEach(craving => {
+                const nts = cravingToNeurotransmitter[craving] || [];
+                nts.forEach(nt => depletedNeurotransmitters.add(nt));
+            });
+
+            // Generate results HTML
+            let resultsHTML = '';
+            
+            if (depletedNeurotransmitters.size === 0) {
+                resultsHTML = '<div class="neurotransmitter-list"><p>No specific neurotransmitter deficiencies detected based on your selections.</p></div>';
+            } else {
+                // List neurotransmitters
+                resultsHTML += '<div class="neurotransmitter-list">';
+                depletedNeurotransmitters.forEach(nt => {
+                    resultsHTML += `<div class="nt-item">${nt}</div>`;
+                });
+                resultsHTML += '</div>';
+
+                // Collect all foods from all depleted neurotransmitters
+                const allFoods = [];
+                depletedNeurotransmitters.forEach(nt => {
+                    allFoods.push(...foodRecommendations[nt]);
+                });
+
+                // Get 4 random unique foods from the combined list
+                const uniqueFoods = [...new Set(allFoods)];
+                const selectedFoods = getRandomFoods(uniqueFoods, 4);
+
+                // Display foods
+                resultsHTML += `
+                    <div class="foods-section">
+                        <h3>Recommended Foods</h3>
+                        <div class="food-list">
+                            ${selectedFoods.map(food => `<span class="food-tag">${food}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+            document.getElementById('selectionPage').classList.add('hidden');
+            document.getElementById('resultsPage').classList.add('active');
+        }
+
+        function goBack() {
+            // Reset selections
+            selectedCount = 0;
+            selectedCravings.clear();
+            
+            const foodItems = document.querySelectorAll('.food-item');
+            foodItems.forEach(item => {
+                item.classList.remove('selected', 'disabled');
+            });
+            
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('resultsPage').classList.remove('active');
+            document.getElementById('selectionPage').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('disclaimerModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
